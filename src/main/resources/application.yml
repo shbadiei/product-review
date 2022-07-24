@@ -1,0 +1,12 @@
+security:
+  jwt:
+    secret: b8eef83b7adf581e219b817a
+    ttlInSeconds: 300
+spring:
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/eshop
+
+
+mongock:
+  change-logs-scan-package: com.codechallenge.product.dbchangelog
