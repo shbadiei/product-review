@@ -1,6 +1,6 @@
 package com.codechallenge.product.uaa.exception;
 
-import com.codechallenge.product.common.BaseException;
+import com.codechallenge.product.common.error.BaseException;
 
 public class UAAException extends BaseException {
 

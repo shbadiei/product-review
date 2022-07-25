@@ -1,4 +1,4 @@
-package com.codechallenge.product.common;
+package com.codechallenge.product.common.error;
 
 import com.codechallenge.product.uaa.exception.UAAErrorInfo;
 import lombok.Getter;
