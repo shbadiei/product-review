@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 
 public enum UAAErrorInfo implements BaseErrorInfo {
 
-    InvalidJWTToken(HttpStatus.UNAUTHORIZED)
+    InvalidJWTToken(HttpStatus.UNAUTHORIZED),
+    BadCredentials(HttpStatus.BAD_REQUEST)
     ;
 
     private String msg;

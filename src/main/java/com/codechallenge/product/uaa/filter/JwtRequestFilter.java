@@ -33,7 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final static String BEARER_PREFIX = "Bearer ";
 
-    public final static String[] PUBLIC_ENDPOINTS = {"/uaa/api/v1/login"};
+    public final static String[] PUBLIC_ENDPOINTS = {"/uaa/api/v1/login", "/aggregation/api/v1/product"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

@@ -14,8 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @ChangeLog
 @Slf4j
@@ -33,7 +36,7 @@ public class CHL14010504 extends ProviderAware {
 
         mongockTemplate.save(new Purchase()
                 .setBuyerUsername(CHL14010502.CUSTOMER_USERNAMES[0])
-                .setOperationDateTime(new Date())
+                .setOperationDateTime(randomDateInLast20Days())
                 .setProductId(a13.getId())
                 .setPriceInToman(4_500_000L)
                 .setProvider(companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE))
@@ -46,7 +49,7 @@ public class CHL14010504 extends ProviderAware {
 
         mongockTemplate.save(new Purchase()
                 .setBuyerUsername(CHL14010502.CUSTOMER_USERNAMES[1])
-                .setOperationDateTime(new Date())
+                .setOperationDateTime(randomDateInLast20Days())
                 .setProductId(lenovoIdeaPad3.getId())
                 .setPriceInToman(18_500_000L)
                 .setProvider(companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE))
@@ -82,31 +85,39 @@ public class CHL14010504 extends ProviderAware {
         mongockTemplate.insertAll(
                 List.of(
                         buildComment(
+                                a13SAMService,
                                 "خوبه قیمتش بالاست",
                                 VerificationStatus.Rejected,
                                 CHL14010502.CUSTOMER_USERNAMES[0]
                         ),
                         buildComment(
+                                a13SAMService,
                                 "خیلی خوبه",
                                 VerificationStatus.Verified,
                                 CHL14010502.CUSTOMER_USERNAMES[1]
                         ),
                         buildCommentAnonymously(
+                                a13SAMService,
                                 "صفحه نمایش کیفیت خوبی داره",
                                 VerificationStatus.NotProcessedYet
                         ),
                         buildCommentAnonymously(
+                                a13SAMService,
                                 "فست شارژش بد نیست",
                                 VerificationStatus.Verified
                         ),
                         buildCommentAnonymously(
+                                a13SAMService,
                                 "آنتن دهی مناسب نیست",
                                 VerificationStatus.Rejected
                         ),
                         buildCommentAnonymously(
+                                a13SAMService,
                                 "رنگش قشنگه",
                                 VerificationStatus.Verified
-                        ),buildCommentAnonymously(
+                        ),
+                        buildCommentAnonymously(
+                                a13SAMService,
                                 "عالیه بخرید",
                                 VerificationStatus.Verified
                         )
@@ -116,15 +127,20 @@ public class CHL14010504 extends ProviderAware {
     }
 
 
-    private Comment buildCommentAnonymously(String text, VerificationStatus verificationStatus) {
-        return buildComment(text, verificationStatus, null);
+    private Comment buildCommentAnonymously(ProductSalesInfo productSalesInfo, String text, VerificationStatus verificationStatus) {
+        return buildComment(productSalesInfo, text, verificationStatus, null);
     }
 
-    private Comment buildComment(String text, VerificationStatus verificationStatus, String commenterUsername) {
+    private Comment buildComment(
+            ProductSalesInfo productSalesInfo,
+            String text,
+            VerificationStatus verificationStatus,
+            String commenterUsername) {
         Comment comment = new Comment()
+                .setProductSalesInfo(productSalesInfo)
                 .setCommentText(text)
                 .setVerificationStatus(verificationStatus);
-        comment.setCreatedBy(commenterUsername).setCreationDate(new Date());
+        comment.setCreatedBy(commenterUsername).setCreationDate(randomDateInLast20Days());
         return comment;
     }
 
@@ -143,7 +159,20 @@ public class CHL14010504 extends ProviderAware {
             VerificationStatus verificationStatus,
             String voterUsername) {
         Vote vote = new Vote().setRate(rating).setVerificationStatus(verificationStatus);
-        vote.setCreatedBy(voterUsername).setCreationDate(new Date());
+        vote.setCreatedBy(voterUsername).setCreationDate(randomDateInLast20Days());
         productSalesInfo.addVote(vote);
+    }
+
+    public Date randomDateInLast20Days() {
+        Instant twentyDaysAgo = Instant.now().minus(Duration.ofDays(20));
+        return new Date(randomDateBetween(twentyDaysAgo, Instant.now()).toEpochMilli());
+    }
+
+    private Instant randomDateBetween(Instant startInclusive, Instant endExclusive) {
+        long startSeconds = startInclusive.getEpochSecond();
+        long endSeconds = endExclusive.getEpochSecond();
+        long random = ThreadLocalRandom.current().nextLong(startSeconds, endSeconds);
+
+        return Instant.ofEpochSecond(random);
     }
 }

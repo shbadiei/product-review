@@ -21,7 +21,11 @@ public enum StarRating {
         this.weight = weight;
     }
 
-    public Double calcAverageRate(List<StarRating> ratings) {
-        return ratings.stream().filter(Objects::nonNull).mapToInt(StarRating::getWeight).average().orElse(0.0);
+    public static Double calcAverageRate(List<StarRating> ratings) {
+        //round average weight of two decimal places
+        return Math.round(
+                ratings.stream().filter(Objects::nonNull).mapToInt(StarRating::getWeight).average().orElse(0.0)
+                        *100.0
+        )/100.0;
     }
 }

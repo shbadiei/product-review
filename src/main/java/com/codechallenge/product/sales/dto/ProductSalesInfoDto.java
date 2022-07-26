@@ -2,6 +2,7 @@ package com.codechallenge.product.sales.dto;
 
 import com.codechallenge.product.sales.model.entity.ReviewAccessibilitySetting;
 import com.codechallenge.product.sales.model.entity.Vote;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
@@ -22,7 +23,10 @@ public class ProductSalesInfoDto {
 
     private Long priceInToman;
 
+    @JsonIgnore
     private List<Vote> votes;
+
+    private Double averageVote;
 
     private List<CommentDto> lastComments;
 

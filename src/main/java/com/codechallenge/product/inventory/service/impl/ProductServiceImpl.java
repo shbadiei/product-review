@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     @Override
-    public Page<ProductDto> find(Product example, PageRequest pageRequest) {
-        return productRepository.findProduct(example, pageRequest).map(productMapper::toDto);
+    public Page<ProductDto> find(ProductDto example, PageRequest pageRequest) {
+        return productRepository.findProduct(productMapper.toEntity(example), pageRequest).map(productMapper::toDto);
     }
 }

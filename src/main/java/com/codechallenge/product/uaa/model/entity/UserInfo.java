@@ -30,8 +30,7 @@ public class UserInfo implements UserDetails {
     private Boolean active;
     private List<Role> roles;
 
-    @DBRef
-    private Provider provider;
+    private String providerCompanyName;
 
     @Override
     @Transient
