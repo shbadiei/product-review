@@ -1,11 +1,13 @@
 package com.codechallenge.product.inventory.model.entity;
 
 import com.codechallenge.product.inventory.model.enumuration.ProductCategory;
-import com.codechallenge.product.sales.model.entity.Provider;
+import com.codechallenge.product.sales.model.entity.ProductSalesInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
@@ -25,5 +27,9 @@ public class Product {
     private ProductCategory category;
 
     private List<Vote> votes;
+
+    @DBRef
+    @JsonManagedReference
+    private List<ProductSalesInfo> salesInfos;
 
 }

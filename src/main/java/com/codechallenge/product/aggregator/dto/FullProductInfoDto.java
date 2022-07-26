@@ -1,6 +1,7 @@
 package com.codechallenge.product.aggregator.dto;
 
 import com.codechallenge.product.inventory.dto.ProductDto;
+import com.codechallenge.product.sales.dto.SalesInfoDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

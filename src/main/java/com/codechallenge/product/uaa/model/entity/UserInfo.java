@@ -1,17 +1,18 @@
 package com.codechallenge.product.uaa.model.entity;
 
+import com.codechallenge.product.sales.model.entity.Provider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -22,16 +23,20 @@ public class UserInfo implements UserDetails {
     @Id
     private ObjectId id;
     private String username;
+
     @JsonIgnore
     private String hashedPassword;
-    private String fullName;
+
     private Boolean active;
     private List<Role> roles;
+
+    @DBRef
+    private Provider provider;
 
     @Override
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(Role.ADMIN);
+        return roles;
     }
 
     @Override
