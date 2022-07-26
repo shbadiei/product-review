@@ -1,9 +1,7 @@
 package com.codechallenge.product.sales.model.entity;
 
-import com.codechallenge.product.inventory.model.entity.Product;
 import com.codechallenge.product.sales.exception.SalesErrorInfo;
 import com.codechallenge.product.sales.exception.SalesException;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
@@ -27,9 +25,7 @@ public class ProductSalesInfo implements Serializable {
     private ObjectId id;
 
     @NotNull
-    @DBRef
-    @JsonBackReference
-    private Product product;
+    private ObjectId productId;
 
     @NotNull
     @DBRef

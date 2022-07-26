@@ -200,7 +200,7 @@ public class CHL14010502 extends ProviderAware {
             );
         }
         mongockTemplate.save(new ProductSalesInfo()
-                .setProduct(product)
+                .setProductId(product.getId())
                 .setProvider(provider)
                 .setPriceInToman(priceInToman)
                 .setReviewAccessibilitySetting(reviewSetting)

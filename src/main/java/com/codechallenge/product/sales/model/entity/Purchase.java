@@ -1,9 +1,8 @@
 package com.codechallenge.product.sales.model.entity;
 
-import com.codechallenge.product.inventory.model.entity.Product;
-import com.codechallenge.product.uaa.model.entity.UserInfo;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
@@ -12,12 +11,12 @@ import java.util.Date;
 @Accessors(chain = true)
 public class Purchase {
 
-    @DBRef
-    private Product product;
+    private ObjectId productId;
+
     @DBRef
     private Provider provider;
-    @DBRef
-    private UserInfo buyer;
+
+    private String buyerUsername;
 
     private Long priceInToman;
 

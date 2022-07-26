@@ -1,4 +1,4 @@
-package com.codechallenge.product.inventory.dto;
+package com.codechallenge.product.sales.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,8 @@ public class CommentDto {
 
     private String commentText;
 
-    private Date  createdAt;
+    private String createdBy;
+
+    private Date createdAt;
 
 }

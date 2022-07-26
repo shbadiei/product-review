@@ -7,7 +7,6 @@ import com.codechallenge.product.sales.model.entity.Comment;
 import com.codechallenge.product.sales.model.entity.ProductSalesInfo;
 import com.codechallenge.product.sales.model.entity.Purchase;
 import com.codechallenge.product.sales.model.entity.Vote;
-import com.codechallenge.product.uaa.model.entity.UserInfo;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.github.cloudyrock.mongock.driver.mongodb.springdata.v3.decorator.impl.MongockTemplate;
@@ -27,9 +26,17 @@ public class CHL14010504 extends ProviderAware {
 
         makeSureCompanyTitle2ProviderMapIsFilled(mongockTemplate);
 
-        UserInfo mirmardi = mongockTemplate.findOne(
-                Query.query(new Criteria("username").is(CHL14010502.CUSTOMER_USERNAMES[0])),
-                UserInfo.class
+        Product a13 = mongockTemplate.findOne(
+                Query.query(new Criteria("title").is(CHL14010502.PRODUCT_TITLES[0])),
+                Product.class
+        );
+
+        mongockTemplate.save(new Purchase()
+                .setBuyerUsername(CHL14010502.CUSTOMER_USERNAMES[0])
+                .setOperationDateTime(new Date())
+                .setProductId(a13.getId())
+                .setPriceInToman(4_500_000L)
+                .setProvider(companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE))
         );
 
         Product lenovoIdeaPad3 = mongockTemplate.findOne(
@@ -38,10 +45,10 @@ public class CHL14010504 extends ProviderAware {
         );
 
         mongockTemplate.save(new Purchase()
-                .setBuyer(mirmardi)
+                .setBuyerUsername(CHL14010502.CUSTOMER_USERNAMES[1])
                 .setOperationDateTime(new Date())
-                .setProduct(lenovoIdeaPad3)
-                .setPriceInToman(4_500_000L)
+                .setProductId(lenovoIdeaPad3.getId())
+                .setPriceInToman(18_500_000L)
                 .setProvider(companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE))
         );
 
@@ -52,10 +59,10 @@ public class CHL14010504 extends ProviderAware {
 
         ProductSalesInfo a13SAMService = mongockTemplate.findOne(Query.query(Criteria.byExample(
                 new ProductSalesInfo()
-                        .setProduct(mongockTemplate.findOne(
+                        .setProductId(mongockTemplate.findOne(
                                 Query.query(new Criteria("title").is(CHL14010502.PRODUCT_TITLES[0])),
                                 Product.class
-                        ))
+                        ).getId())
                         .setProvider(companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE))
         )), ProductSalesInfo.class);
 
@@ -87,6 +94,21 @@ public class CHL14010504 extends ProviderAware {
                         buildCommentAnonymously(
                                 "صفحه نمایش کیفیت خوبی داره",
                                 VerificationStatus.NotProcessedYet
+                        ),
+                        buildCommentAnonymously(
+                                "فست شارژش بد نیست",
+                                VerificationStatus.Verified
+                        ),
+                        buildCommentAnonymously(
+                                "آنتن دهی مناسب نیست",
+                                VerificationStatus.Rejected
+                        ),
+                        buildCommentAnonymously(
+                                "رنگش قشنگه",
+                                VerificationStatus.Verified
+                        ),buildCommentAnonymously(
+                                "عالیه بخرید",
+                                VerificationStatus.Verified
                         )
                 )
         );

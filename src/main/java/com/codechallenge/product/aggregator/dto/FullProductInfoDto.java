@@ -1,18 +1,24 @@
 package com.codechallenge.product.aggregator.dto;
 
+import com.codechallenge.product.sales.dto.CommentDto;
 import com.codechallenge.product.inventory.dto.ProductDto;
-import com.codechallenge.product.sales.dto.SalesInfoDto;
+import com.codechallenge.product.sales.dto.ProductSalesInfoDto;
+import com.codechallenge.product.sales.model.entity.Vote;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 @Data
 @Accessors(chain = true)
 public class FullProductInfoDto extends ProductDto {
 
-    private SalesInfoDto salesInfo;
+    private List<Vote> votes;
 
-    public FullProductInfoDto(ProductDto productInfo, SalesInfoDto salesInfo) {
+    private Double averageVote;
 
-        this.salesInfo = salesInfo;
-    }
+    private List<CommentDto> lastComments;
+
+    private ProductSalesInfoDto salesInfo;
+
 }

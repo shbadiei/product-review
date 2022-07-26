@@ -25,5 +25,4 @@ public class Provider {
     @NotNull
     private String companyTitle;
 
-    private ReviewAccessibilitySetting providerGeneralReviewAccessibilitySetting;
 }

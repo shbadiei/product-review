@@ -1,5 +1,8 @@
 package com.codechallenge.product.inventory.model.enumuration;
 
+import java.util.List;
+import java.util.Objects;
+
 public enum StarRating {
 
     OneStar(1),
@@ -16,5 +19,9 @@ public enum StarRating {
 
     StarRating(Integer weight) {
         this.weight = weight;
+    }
+
+    public Double calcAverageRate(List<StarRating> ratings) {
+        return ratings.stream().filter(Objects::nonNull).mapToInt(StarRating::getWeight).average().orElse(0.0);
     }
 }
