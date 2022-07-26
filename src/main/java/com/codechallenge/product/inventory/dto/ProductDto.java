@@ -1,6 +1,6 @@
 package com.codechallenge.product.inventory.dto;
 
-import com.codechallenge.product.inventory.model.entity.Vote;
+import com.codechallenge.product.sales.model.entity.Vote;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;

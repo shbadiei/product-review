@@ -1,6 +1,7 @@
-package com.codechallenge.product.inventory.model.entity;
+package com.codechallenge.product.sales.model.entity;
 
 import com.codechallenge.product.common.audit.Auditable;
+import com.codechallenge.product.inventory.model.entity.Product;
 import com.codechallenge.product.inventory.model.enumuration.VerificationStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,7 +27,7 @@ public class Comment extends Auditable {
     private String commentText;
 
     @DBRef
-    private Product product;
+    private ProductSalesInfo productSalesInfo;
 
     @NotNull
     private VerificationStatus verificationStatus;

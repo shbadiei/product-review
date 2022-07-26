@@ -15,27 +15,28 @@ import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.github.cloudyrock.mongock.driver.mongodb.springdata.v3.decorator.impl.MongockTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ChangeLog
 @Slf4j
-public class CHL14010502 {
+public class CHL14010502 extends ProviderAware {
 
-    private Map<String, Provider> companyTitle2Provider = new HashMap<>();
-
-    private final static String SAMSERVICE_COMPANY_TITLE = "SAMSERVICE";
-    private final static String MADIRAN_COMPANY_TITLE = "MADIRAN";
+    public final static String[] CUSTOMER_USERNAMES = {"r.mirmardi", "n.hematnasab"};
+    public final static String[] PRODUCT_TITLES = {"Samsung Galaxy A13", "Lenovo IdeaPad 3"};
 
     @ChangeSet(order = "001", id = "CHL14010502-1-INITIALIZE_PROVIDERS_DATA", author = "sh.badiei")
     public void initializeProvidersData(MongockTemplate mongockTemplate) {
         companyTitle2Provider = mongockTemplate.insertAll(
-                Arrays.asList(
+                List.of(
                         new Provider(SAMSERVICE_COMPANY_TITLE),
                         new Provider(MADIRAN_COMPANY_TITLE)
                 )
@@ -59,37 +60,40 @@ public class CHL14010502 {
 
         makeSureCompanyTitle2ProviderMapIsFilled(mongockTemplate);
 
-        mongockTemplate.insertAll(
-                Arrays.asList(
-                        buildActiveUserInfo(
-                                "s.badiei",
-                                "rsm825",
-                                SAMSERVICE_COMPANY_TITLE,
-                                Collections.singletonList(Role.PROVIDER_SALES_ADMIN)
-                        ),
-                        buildActiveUserInfo(
-                                "m.rezvani",
-                                "rsm825",
-                                SAMSERVICE_COMPANY_TITLE,
-                                Collections.singletonList(Role.PROVIDER_SALES_PERSON)
-                        ),
-                        buildActiveUserInfo(
-                                "r.sajadi",
-                                "rsm825",
-                                MADIRAN_COMPANY_TITLE,
-                                Arrays.asList(Role.PROVIDER_SALES_ADMIN, Role.PROVIDER_SALES_PERSON)
-                        ),
-                        buildActiveUserInfo(
-                                "d.shiroodi",
-                                "rsm825",
-                                MADIRAN_COMPANY_TITLE,
-                                Collections.singletonList(Role.CUSTOMER)
-                        )
+        final String samePassword = "rsm825";
+
+        List<UserInfo> userInfos = List.of(
+                buildActiveUserUserInfo(
+                        "d.shiroodi",
+                        samePassword,
+                        SAMSERVICE_COMPANY_TITLE,
+                        Collections.singletonList(Role.PROVIDER_SALES_ADMIN)
+                ),
+                buildActiveUserUserInfo(
+                        "m.rezvani",
+                        samePassword,
+                        SAMSERVICE_COMPANY_TITLE,
+                        Collections.singletonList(Role.PROVIDER_SALES_PERSON)
+                ),
+                buildActiveUserUserInfo(
+                        "r.sajadi",
+                        samePassword,
+                        MADIRAN_COMPANY_TITLE,
+                        List.of(Role.PROVIDER_SALES_ADMIN, Role.PROVIDER_SALES_PERSON)
                 )
         );
+
+        List<UserInfo> allUserList = new ArrayList<>(userInfos);
+
+        List.of(CUSTOMER_USERNAMES).forEach(username -> allUserList.add(
+                        buildCustomerUserInfo(username, samePassword)
+                )
+        );
+
+        mongockTemplate.insertAll(allUserList);
     }
 
-    private UserInfo buildActiveUserInfo(
+    private UserInfo buildActiveUserUserInfo(
             String username, String plainPassword,
             String company, List<Role> roles) {
         return new UserInfo().setUsername(username)
@@ -97,8 +101,12 @@ public class CHL14010502 {
                         AppContextUtil.getContext().getBean(PasswordUtil.class).encodePassword(username, plainPassword)
                 )
                 .setRoles(roles)
-                .setProvider(companyTitle2Provider.get(company))
+                .setProvider(StringUtils.isBlank(company) ? null : companyTitle2Provider.get(company))
                 .setActive(true);
+    }
+
+    private UserInfo buildCustomerUserInfo(String username, String plainPassword) {
+        return buildActiveUserUserInfo(username, plainPassword, null, Collections.singletonList(Role.CUSTOMER));
     }
 
     @ChangeSet(order = "004", id = "CHL14010502-4-USERINFO_UNIQ_IDX", author = "sh.badiei")
@@ -109,17 +117,29 @@ public class CHL14010502 {
                 );
     }
 
-    @ChangeSet(order = "005", id = "CHL14010503-3-INITIALIZE_INVENTORY_DATA", author = "sh.badiei")
+    @ChangeSet(order = "005", id = "CHL14010503-5-INITIALIZE_INVENTORY_DATA", author = "sh.badiei")
     public void initializeInventoryData(MongockTemplate mongockTemplate) {
 
         makeSureCompanyTitle2ProviderMapIsFilled(mongockTemplate);
 
         buildAndSaveProductAndItsSalesInfo(
                 mongockTemplate,
-                "Samsung Galaxy A13",
+                PRODUCT_TITLES[0],
                 ProductCategory.Mobile,
                 companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE),
                 4_500_000L,
+                new ReviewAccessibilitySetting()
+                        .setCommentAllowedActor(AllowedActor.AllUsers)
+                        .setVoteAllowedActor(AllowedActor.AllUsers)
+                        .setProductVisibility(Visibility.VISIBLE)
+        );
+
+        buildAndSaveProductAndItsSalesInfo(
+                mongockTemplate,
+                PRODUCT_TITLES[0],
+                ProductCategory.Mobile,
+                companyTitle2Provider.get(MADIRAN_COMPANY_TITLE),
+                4_600_000L,
                 new ReviewAccessibilitySetting()
                         .setCommentAllowedActor(AllowedActor.Buyer)
                         .setVoteAllowedActor(AllowedActor.AllUsers)
@@ -128,31 +148,19 @@ public class CHL14010502 {
 
         buildAndSaveProductAndItsSalesInfo(
                 mongockTemplate,
-                "Samsung Galaxy A13",
-                ProductCategory.Mobile,
-                companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE),
-                4_500_000L,
-                new ReviewAccessibilitySetting()
-                        .setCommentAllowedActor(AllowedActor.Buyer)
-                        .setVoteAllowedActor(AllowedActor.AllUsers)
-                        .setProductVisibility(Visibility.VISIBLE)
-        );
-
-        buildAndSaveProductAndItsSalesInfo(
-                mongockTemplate,
-                "Lenovo IdeaPad 3",
+                PRODUCT_TITLES[1],
                 ProductCategory.Laptop,
                 companyTitle2Provider.get(SAMSERVICE_COMPANY_TITLE),
                 18_500_000L,
                 new ReviewAccessibilitySetting()
-                        .setCommentAllowedActor(AllowedActor.AllUsers)
-                        .setVoteAllowedActor(AllowedActor.NoOne)
+                        .setCommentAllowedActor(AllowedActor.Buyer)
+                        .setVoteAllowedActor(AllowedActor.Buyer)
                         .setProductVisibility(Visibility.VISIBLE)
         );
 
         buildAndSaveProductAndItsSalesInfo(
                 mongockTemplate,
-                "Lenovo IdeaPad 3",
+                PRODUCT_TITLES[1],
                 ProductCategory.Laptop,
                 companyTitle2Provider.get(MADIRAN_COMPANY_TITLE),
                 17_000_000L,
@@ -170,6 +178,7 @@ public class CHL14010502 {
                         new Index().unique().named("title-uniq-idx").on("title", Sort.Direction.ASC)
                 );
     }
+
 
     private void buildAndSaveProductAndItsSalesInfo(
             MongockTemplate mongockTemplate,
@@ -198,19 +207,5 @@ public class CHL14010502 {
         );
     }
 
-    private void makeSureCompanyTitle2ProviderMapIsFilled(MongockTemplate mongockTemplate) {
-        if (companyTitle2Provider.containsKey(SAMSERVICE_COMPANY_TITLE) && companyTitle2Provider.containsKey(MADIRAN_COMPANY_TITLE)) {
-            return;
-        }
-
-        if (mongockTemplate.count(new Query(), Provider.class) == 0L) {
-            throw new RuntimeException("both companyTitle2Provider and Provider-Collection are empty");
-        }
-
-        companyTitle2Provider = mongockTemplate.findAll(Provider.class).stream().collect(Collectors.toMap(
-                Provider::getCompanyTitle,
-                provider -> provider
-        ));
-    }
 
 }

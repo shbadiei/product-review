@@ -1,6 +1,6 @@
-package com.codechallenge.product.inventory.model.repository;
+package com.codechallenge.product.sales.repository;
 
-import com.codechallenge.product.inventory.model.entity.Comment;
+import com.codechallenge.product.sales.model.entity.Comment;
 import org.bson.types.ObjectId;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
