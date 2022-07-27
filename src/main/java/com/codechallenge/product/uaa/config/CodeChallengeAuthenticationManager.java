@@ -1,14 +1,14 @@
 package com.codechallenge.product.uaa.config;
 
+import com.codechallenge.product.uaa.exception.UAAErrorInfo;
+import com.codechallenge.product.uaa.exception.UAAException;
 import com.codechallenge.product.uaa.model.repository.UserInfoRepository;
 import com.codechallenge.product.uaa.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,7 +30,6 @@ public class CodeChallengeAuthenticationManager implements AuthenticationManager
                                 plainPassword,
                                 user.getAuthorities()
                         )
-                        //todo change to local exceptions
-                ).orElseThrow(() -> new BadCredentialsException("Authentication failed"));
+                ).orElseThrow(() -> new UAAException(UAAErrorInfo.BadCredentials));
     }
 }

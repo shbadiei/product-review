@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 
 public interface ProductService {
 
-    Page<ProductDto> find(PageRequest pageRequest);
-
+    Page<ProductDto> find(ProductDto example, PageRequest pageRequest);
 
 }

@@ -9,7 +9,7 @@ import com.codechallenge.product.sales.model.enumuration.AllowedActor;
 import com.codechallenge.product.sales.model.enumuration.Visibility;
 import com.codechallenge.product.uaa.model.entity.Role;
 import com.codechallenge.product.uaa.model.entity.UserInfo;
-import com.codechallenge.product.uaa.util.AppContextUtil;
+import com.codechallenge.product.common.util.AppContextUtil;
 import com.codechallenge.product.uaa.util.PasswordUtil;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
@@ -101,7 +101,7 @@ public class CHL14010502 extends ProviderAware {
                         AppContextUtil.getContext().getBean(PasswordUtil.class).encodePassword(username, plainPassword)
                 )
                 .setRoles(roles)
-                .setProvider(StringUtils.isBlank(company) ? null : companyTitle2Provider.get(company))
+                .setProviderCompanyName(company)
                 .setActive(true);
     }
 
@@ -200,7 +200,7 @@ public class CHL14010502 extends ProviderAware {
             );
         }
         mongockTemplate.save(new ProductSalesInfo()
-                .setProduct(product)
+                .setProductId(product.getId())
                 .setProvider(provider)
                 .setPriceInToman(priceInToman)
                 .setReviewAccessibilitySetting(reviewSetting)

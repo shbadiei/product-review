@@ -2,7 +2,6 @@ package com.codechallenge.product.inventory.model.entity;
 
 import com.codechallenge.product.inventory.model.enumuration.ProductCategory;
 import com.codechallenge.product.sales.model.entity.ProductSalesInfo;
-import com.codechallenge.product.sales.model.entity.Vote;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.experimental.Accessors;

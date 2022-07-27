@@ -1,9 +1,11 @@
 package com.codechallenge.product.uaa.util;
 
 import com.codechallenge.product.uaa.model.entity.Role;
+import com.codechallenge.product.uaa.model.entity.UserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,15 +48,19 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
 
-    public String generateToken(UsernamePasswordAuthenticationToken token) {
-        Map<String, Object> rolesClaim = new HashMap<>();
-        if (!CollectionUtils.isEmpty(token.getAuthorities())) {
-            rolesClaim.put(
+    public String generateToken(UserInfo userInfo) {
+        Map<String, Object> claims = new HashMap<>();
+
+        if (!CollectionUtils.isEmpty(userInfo.getAuthorities())) {
+            claims.put(
                     "roles",
-                    token.getAuthorities().stream().map(auth -> ((Role) auth).getAuthority()).collect(Collectors.toList())
+                    userInfo.getAuthorities().stream().map(auth -> ((Role) auth).getAuthority()).collect(Collectors.toList())
             );
         }
-        return doGenerateToken(rolesClaim, token.getPrincipal().toString());
+        if (StringUtils.isNotBlank(userInfo.getProviderCompanyName())) {
+            claims.put("company", userInfo.getProviderCompanyName());
+        }
+        return doGenerateToken(claims, userInfo.getUsername());
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
