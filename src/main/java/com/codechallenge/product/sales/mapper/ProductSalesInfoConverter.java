@@ -1,7 +1,7 @@
 package com.codechallenge.product.sales.mapper;
 
-import com.codechallenge.product.common.util.AppContextUtil;
 import com.codechallenge.product.inventory.model.enumuration.StarRating;
+import com.codechallenge.product.inventory.model.enumuration.VerificationStatus;
 import com.codechallenge.product.sales.dto.ProductSalesInfoDto;
 import com.codechallenge.product.sales.model.entity.Comment;
 import com.codechallenge.product.sales.model.entity.ProductSalesInfo;
@@ -26,12 +26,15 @@ public class ProductSalesInfoConverter {
 
     public ProductSalesInfoDto convert(ProductSalesInfo salesInfo) {
         ProductSalesInfoDto salesInfoDto = productSalesInfoMapper.toDto(salesInfo);
-        Page<Comment> lastCommentsPage = commentRepository.findLatestCommentsForProductSalesInfo(salesInfo);
+        Page<Comment> lastCommentsPage = commentRepository.findLatestVerifiedCommentsForProductSalesInfo(salesInfo);
         return salesInfoDto
                 .setAverageVote(
                         CollectionUtils.isEmpty(salesInfo.getVotes()) ? 0.0 :
                                 StarRating.calcAverageRate(
-                                        salesInfo.getVotes().stream().map(Vote::getRate).collect(Collectors.toList())
+                                        salesInfo.getVotes().stream()
+                                                .filter(vote -> vote.getVerificationStatus() != null
+                                                        && vote.getVerificationStatus() == VerificationStatus.Verified)
+                                                .map(Vote::getRate).collect(Collectors.toList())
                                 )
                 )
                 .setTotalCommentCount(lastCommentsPage.getTotalElements())

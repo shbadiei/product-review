@@ -1,5 +1,6 @@
 package com.codechallenge.product.sales.repository;
 
+import com.codechallenge.product.inventory.model.enumuration.VerificationStatus;
 import com.codechallenge.product.sales.model.entity.Comment;
 import com.codechallenge.product.sales.model.entity.ProductSalesInfo;
 import org.bson.types.ObjectId;
@@ -12,10 +13,12 @@ public interface CommentRepository extends MongoRepository<Comment, ObjectId> {
 
     Integer NUMBER_OF_LAST_COMMITS = 3;
 
-    default Page<Comment> findLatestCommentsForProductSalesInfo(ProductSalesInfo productSalesInfo) {
+    default Page<Comment> findLatestVerifiedCommentsForProductSalesInfo(ProductSalesInfo productSalesInfo) {
         return findAll(
-                Example.of(new Comment().setProductSalesInfo(productSalesInfo), ExampleMatcher.matching()),
-                PageRequest.of(0, NUMBER_OF_LAST_COMMITS, Sort.by(Sort.Direction.DESC,"creationDate"))
+                Example.of(
+                        new Comment().setProductSalesInfo(productSalesInfo).setVerificationStatus(VerificationStatus.Verified),
+                        ExampleMatcher.matching()),
+                PageRequest.of(0, NUMBER_OF_LAST_COMMITS, Sort.by(Sort.Direction.DESC, "creationDate"))
         );
     }
 

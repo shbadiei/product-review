@@ -1,7 +1,6 @@
 package com.codechallenge.product.sales.model.entity;
 
 import com.codechallenge.product.common.audit.Auditable;
-import com.codechallenge.product.inventory.model.entity.Product;
 import com.codechallenge.product.inventory.model.enumuration.VerificationStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

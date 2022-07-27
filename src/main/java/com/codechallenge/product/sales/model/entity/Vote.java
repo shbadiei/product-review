@@ -1,6 +1,6 @@
 package com.codechallenge.product.sales.model.entity;
 
-import com.codechallenge.product.common.audit.Auditable;
+import com.codechallenge.product.common.audit.AutoAuditable;
 import com.codechallenge.product.inventory.model.enumuration.StarRating;
 import com.codechallenge.product.inventory.model.enumuration.VerificationStatus;
 import lombok.Data;
@@ -9,12 +9,11 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class Vote extends Auditable {
+public class Vote extends AutoAuditable {
 
     @NotNull
     private StarRating rate;
