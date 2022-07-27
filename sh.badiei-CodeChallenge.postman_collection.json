@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "bc4a3624-2fc5-4d55-a534-d9109f2842b2",
+		"name": "sh.badiei-CodeChallenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6513685"
+	},
+	"item": [
+		{
+			"name": "aggregation",
+			"item": [
+				{
+					"name": "get-product-Public",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/aggregation/api/v1/public/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"aggregation",
+								"api",
+								"v1",
+								"public",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-product-forSalesDep",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/aggregation/api/v1/sales/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"aggregation",
+								"api",
+								"v1",
+								"sales",
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sales",
+			"item": [
+				{
+					"name": "set-reviewsetting",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX1BST1ZJREVSX1NBTEVTX0FETUlOIl0sImNvbXBhbnkiOiJTQU1TRVJWSUNFIiwic3ViIjoiZC5zaGlyb29kaSIsImlhdCI6MTY1ODkwMDczNSwiZXhwIjoxNjU4OTAyNTM1fQ.StdhAoowWHVJo6WS47bDBSVMXpe0Wk6X5DbmV9VbDRb1_vKaz7Y0a-zvV73PmpX-6oTkGz-ulzdDjNTnTTWT_g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productVisibility\": \"VISIBLE\",\r\n    \"voteAllowedActor\": \"AllUsers\",\r\n    \"commentAllowedActor\": \"AllUsers\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/sales/api/v1/reviewsetting/:salesInfoId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales",
+								"api",
+								"v1",
+								"reviewsetting",
+								":salesInfoId"
+							],
+							"variable": [
+								{
+									"key": "salesInfoId",
+									"value": "62e0b4f37b88fa6a0c1a7508"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"d.shiroodi\",\n    \"password\": \"rsm825\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/uaa/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"uaa",
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearer",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX1BST1ZJREVSX1NBTEVTX0FETUlOIl0sImNvbXBhbnkiOiJTQU1TRVJWSUNFIiwic3ViIjoiZC5zaGlyb29kaSIsImlhdCI6MTY1ODkwMDczNSwiZXhwIjoxNjU4OTAyNTM1fQ.StdhAoowWHVJo6WS47bDBSVMXpe0Wk6X5DbmV9VbDRb1_vKaz7Y0a-zvV73PmpX-6oTkGz-ulzdDjNTnTTWT_g",
+			"type": "string"
+		}
+	]
+}
