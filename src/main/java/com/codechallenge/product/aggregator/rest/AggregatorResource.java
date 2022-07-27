@@ -21,10 +21,27 @@ public class AggregatorResource {
 
     private final AggregationService aggregationService;
 
-    @GetMapping("/product")
+    @GetMapping("/public/product")
     public ResponseEntity<Page<FullProductInfoDto>> findProducts(ProductInfoSearchRequestDto requestDto) {
 
         Page<FullProductInfoDto> fullProductInfoDtoPage = aggregationService.find(
+                requestDto,
+                PageRequest.of(
+                        requestDto.getPage(),
+                        requestDto.getSize(),
+                        requestDto.getSort() == null ? Sort.by(Sort.Direction.ASC,"category") : requestDto.getSort()
+                )
+        );
+        if(fullProductInfoDtoPage.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(fullProductInfoDtoPage);
+    }
+
+    @GetMapping("/sales/product")
+    public ResponseEntity<Page<FullProductInfoDto>> findProductsForSalesDep(ProductInfoSearchRequestDto requestDto) {
+
+        Page<FullProductInfoDto> fullProductInfoDtoPage = aggregationService.findForSalesDep(
                 requestDto,
                 PageRequest.of(
                         requestDto.getPage(),

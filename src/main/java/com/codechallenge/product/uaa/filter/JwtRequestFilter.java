@@ -33,7 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final static String BEARER_PREFIX = "Bearer ";
 
-    public final static String[] PUBLIC_ENDPOINTS = {"/uaa/api/v1/login", "/aggregation/api/v1/product"};
+    public final static String[] PUBLIC_ENDPOINTS = {"/uaa/api/v1/login", "/aggregation/api/v1/public/product"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -68,16 +68,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String finalJwtToken = jwtToken;
 
-        //Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            //todo must be cached
             userInfoRepository.findByUsername(username).ifPresent(
                     user -> {
                         // check token validity offline
                         if (jwtTokenUtil.validateToken(finalJwtToken, user)) {
                             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                                    user, null, user.getAuthorities());
+                                    user.getUsername(), null, user.getAuthorities());
                             token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             SecurityContextHolder.getContext().setAuthentication(token);
                         }

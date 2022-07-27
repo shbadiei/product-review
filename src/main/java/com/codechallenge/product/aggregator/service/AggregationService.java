@@ -9,4 +9,5 @@ public interface AggregationService {
 
     Page<FullProductInfoDto> find(ProductInfoSearchRequestDto searchRequestDto, PageRequest pageRequest);
 
+    Page<FullProductInfoDto> findForSalesDep(ProductInfoSearchRequestDto searchRequestDto, PageRequest pageRequest);
 }

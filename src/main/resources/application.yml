@@ -1,7 +1,7 @@
 security:
   jwt:
     secret: b8eef83b7adf581e219b817a
-    ttlInSeconds: 300
+    ttlInSeconds: 1800
 spring:
   data:
     mongodb:

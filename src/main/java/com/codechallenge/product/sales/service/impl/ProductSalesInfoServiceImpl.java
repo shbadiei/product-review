@@ -1,5 +1,6 @@
 package com.codechallenge.product.sales.service.impl;
 
+import com.codechallenge.product.aggregator.mapper.RowLevelSecurityMode;
 import com.codechallenge.product.sales.dto.ProductSalesInfoDto;
 import com.codechallenge.product.sales.mapper.ProductSalesInfoConverter;
 import com.codechallenge.product.sales.mapper.ProductSalesInfoMapper;
@@ -25,17 +26,17 @@ public class ProductSalesInfoServiceImpl implements ProductSalesInfoService {
     private final ProductSalesInfoConverter productSalesInfoConverter;
 
     @Override
-    public Page<ProductSalesInfoDto> find(ProductSalesInfoDto salesInfoExample, PageRequest pageRequest) {
+    public Page<ProductSalesInfoDto> find(RowLevelSecurityMode rlsMode, ProductSalesInfoDto salesInfoExample, PageRequest pageRequest) {
         return productSalesInfoRepository.findAll(
                 productSalesInfoMapper.toEntity(salesInfoExample),
                 pageRequest
-        ).map(productSalesInfoConverter::convert);
+        ).map(salesInfo -> productSalesInfoConverter.convert(rlsMode, salesInfo));
     }
 
     @Override
-    public List<ProductSalesInfoDto> findByProductIds(List<ObjectId> productIds) {
+    public List<ProductSalesInfoDto> findByProductIds(RowLevelSecurityMode rlsMode, List<ObjectId> productIds) {
         return productSalesInfoRepository.findByProductIds(productIds).stream()
-                .map(productSalesInfoConverter::convert)
+                .map(salesInfo -> productSalesInfoConverter.convert(rlsMode, salesInfo))
                 .collect(Collectors.toList());
     }
 }

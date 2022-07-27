@@ -1,5 +1,6 @@
 package com.codechallenge.product.sales.mapper;
 
+import com.codechallenge.product.aggregator.mapper.RowLevelSecurityMode;
 import com.codechallenge.product.inventory.model.enumuration.StarRating;
 import com.codechallenge.product.inventory.model.enumuration.VerificationStatus;
 import com.codechallenge.product.sales.dto.ProductSalesInfoDto;
@@ -24,16 +25,18 @@ public class ProductSalesInfoConverter {
 
     private final ProductSalesInfoMapper productSalesInfoMapper;
 
-    public ProductSalesInfoDto convert(ProductSalesInfo salesInfo) {
+    public ProductSalesInfoDto convert(RowLevelSecurityMode rlsMode, ProductSalesInfo salesInfo) {
         ProductSalesInfoDto salesInfoDto = productSalesInfoMapper.toDto(salesInfo);
-        Page<Comment> lastCommentsPage = commentRepository.findLatestVerifiedCommentsForProductSalesInfo(salesInfo);
+        Page<Comment> lastCommentsPage = commentRepository.findLatestCommentsForProductSalesInfo(
+                salesInfo,
+                rlsMode == RowLevelSecurityMode.CUSTOMER ? VerificationStatus.Verified : null
+        );
         return salesInfoDto
                 .setAverageVote(
                         CollectionUtils.isEmpty(salesInfo.getVotes()) ? 0.0 :
                                 StarRating.calcAverageRate(
                                         salesInfo.getVotes().stream()
-                                                .filter(vote -> vote.getVerificationStatus() != null
-                                                        && vote.getVerificationStatus() == VerificationStatus.Verified)
+                                                .filter(vote -> rlsMode == RowLevelSecurityMode.SALES || vote.getVerificationStatus() != null && vote.getVerificationStatus() == VerificationStatus.Verified)
                                                 .map(Vote::getRate).collect(Collectors.toList())
                                 )
                 )

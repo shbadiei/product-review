@@ -13,10 +13,12 @@ public interface CommentRepository extends MongoRepository<Comment, ObjectId> {
 
     Integer NUMBER_OF_LAST_COMMITS = 3;
 
-    default Page<Comment> findLatestVerifiedCommentsForProductSalesInfo(ProductSalesInfo productSalesInfo) {
+    default Page<Comment> findLatestCommentsForProductSalesInfo(
+            ProductSalesInfo productSalesInfo,
+            VerificationStatus verificationStatus) {
         return findAll(
                 Example.of(
-                        new Comment().setProductSalesInfo(productSalesInfo).setVerificationStatus(VerificationStatus.Verified),
+                        new Comment().setProductSalesInfo(productSalesInfo).setVerificationStatus(verificationStatus),
                         ExampleMatcher.matching()),
                 PageRequest.of(0, NUMBER_OF_LAST_COMMITS, Sort.by(Sort.Direction.DESC, "creationDate"))
         );
