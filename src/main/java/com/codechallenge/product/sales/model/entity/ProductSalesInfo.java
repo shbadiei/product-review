@@ -3,6 +3,7 @@ package com.codechallenge.product.sales.model.entity;
 import com.codechallenge.product.sales.exception.SalesErrorInfo;
 import com.codechallenge.product.sales.exception.SalesException;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

@@ -7,7 +7,9 @@ public enum SalesErrorInfo implements BaseErrorInfo {
 
     //Module Error Index 3
 
-    AlreadyVoteForThisProductSaleInfo(HttpStatus.BAD_REQUEST,400301L);
+    AlreadyVoteForThisProductSaleInfo(HttpStatus.BAD_REQUEST, 400301L),
+    SalesInfoNotFound(HttpStatus.NOT_FOUND, 404302L)
+    ;
 
     private String msg;
 
