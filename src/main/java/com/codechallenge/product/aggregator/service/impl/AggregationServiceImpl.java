@@ -3,7 +3,7 @@ package com.codechallenge.product.aggregator.service.impl;
 import com.codechallenge.product.aggregator.dto.request.ProductInfoSearchRequestDto;
 import com.codechallenge.product.aggregator.dto.response.FullProductInfoDto;
 import com.codechallenge.product.aggregator.mapper.ProductDto2FullMapper;
-import com.codechallenge.product.aggregator.mapper.ProductDto2FullProductInfoStatefulAdapter;
+import com.codechallenge.product.aggregator.mapper.ProductDto2FullProductInfoStatefulConverter;
 import com.codechallenge.product.aggregator.service.AggregationService;
 import com.codechallenge.product.inventory.dto.ProductDto;
 import com.codechallenge.product.inventory.service.ProductService;
@@ -32,13 +32,13 @@ public class AggregationServiceImpl implements AggregationService {
                         .setTitle(searchRequestDto.getProductTitleLike()),
                 pageRequest
         );
-        ProductDto2FullProductInfoStatefulAdapter adapter = new ProductDto2FullProductInfoStatefulAdapter(
+        ProductDto2FullProductInfoStatefulConverter converter = new ProductDto2FullProductInfoStatefulConverter(
                 productSalesInfoService,
                 productDto2FullMapper,
                 productDtoPage.getContent()
         );
 
-        return productDtoPage.map(adapter::adapt);
+        return productDtoPage.map(converter::convert);
     }
 
 

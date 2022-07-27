@@ -1,5 +1,6 @@
 package com.codechallenge.product.common.config;
 
+import com.codechallenge.product.common.config.deserializer.ObjectIdDeserializer;
 import com.codechallenge.product.common.config.serializer.DateSerializer;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.bson.types.ObjectId;
@@ -23,6 +24,7 @@ public class MainConfig extends WebMvcConfigurationSupport {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         builder.serializerByType(ObjectId.class, new ToStringSerializer());
+        builder.deserializerByType(ObjectId.class, new ObjectIdDeserializer());
         builder.serializerByType(Date.class, new DateSerializer());
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(builder.build());
         converters.add(converter);

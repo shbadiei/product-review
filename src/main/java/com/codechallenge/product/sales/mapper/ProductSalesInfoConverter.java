@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class ProductSalesInfoAdapter {
+public class ProductSalesInfoConverter {
 
     private final CommentRepository commentRepository;
 
@@ -24,7 +24,7 @@ public class ProductSalesInfoAdapter {
 
     private final ProductSalesInfoMapper productSalesInfoMapper;
 
-    public ProductSalesInfoDto adapt(ProductSalesInfo salesInfo) {
+    public ProductSalesInfoDto convert(ProductSalesInfo salesInfo) {
         ProductSalesInfoDto salesInfoDto = productSalesInfoMapper.toDto(salesInfo);
         Page<Comment> lastCommentsPage = commentRepository.findLatestCommentsForProductSalesInfo(salesInfo);
         return salesInfoDto

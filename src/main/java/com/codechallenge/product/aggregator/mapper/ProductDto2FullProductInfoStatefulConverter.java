@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 /**
  * Warning: This class is Stateful
  */
-public class ProductDto2FullProductInfoStatefulAdapter {
+public class ProductDto2FullProductInfoStatefulConverter {
 
     final Map<ObjectId, List<ProductSalesInfoDto>> productId2SalesInfos;
 
     final ProductDto2FullMapper productDto2FullMapper;
 
-    public ProductDto2FullProductInfoStatefulAdapter(
+    public ProductDto2FullProductInfoStatefulConverter(
             ProductSalesInfoService productSalesInfoService,
             ProductDto2FullMapper productDto2FullMapper,
             List<ProductDto> productDtos) {
@@ -34,7 +34,7 @@ public class ProductDto2FullProductInfoStatefulAdapter {
         ));
     }
 
-    public FullProductInfoDto adapt(ProductDto productDto) {
+    public FullProductInfoDto convert(ProductDto productDto) {
         return productDto2FullMapper.toDto(productDto).setSalesInfo(productId2SalesInfos.get(productDto.getId()));
     }
 }

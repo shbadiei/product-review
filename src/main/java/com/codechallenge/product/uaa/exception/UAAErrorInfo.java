@@ -5,17 +5,21 @@ import org.springframework.http.HttpStatus;
 
 public enum UAAErrorInfo implements BaseErrorInfo {
 
-    InvalidJWTToken(HttpStatus.UNAUTHORIZED),
-    BadCredentials(HttpStatus.BAD_REQUEST)
-    ;
+    //Module Error Index 4
+
+    InvalidJWTToken(HttpStatus.UNAUTHORIZED,401401L),
+    BadCredentials(HttpStatus.BAD_REQUEST,400402L);
 
     private String msg;
 
     private HttpStatus httpStatus;
 
-    UAAErrorInfo(HttpStatus httpStatus) {
+    private Long errorCode;
+
+    UAAErrorInfo(HttpStatus httpStatus, Long errorCode) {
         this.httpStatus = httpStatus;
-        this.msg = "";
+        this.msg = this.name();
+        this.errorCode = errorCode;
     }
 
     UAAErrorInfo(HttpStatus httpStatus, String msg) {
@@ -31,5 +35,10 @@ public enum UAAErrorInfo implements BaseErrorInfo {
     @Override
     public HttpStatus getHttpStatus() {
         return httpStatus;
+    }
+
+    @Override
+    public Long getErrorCode() {
+        return errorCode;
     }
 }

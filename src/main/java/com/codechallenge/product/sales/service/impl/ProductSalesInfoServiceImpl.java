@@ -1,7 +1,7 @@
 package com.codechallenge.product.sales.service.impl;
 
 import com.codechallenge.product.sales.dto.ProductSalesInfoDto;
-import com.codechallenge.product.sales.mapper.ProductSalesInfoAdapter;
+import com.codechallenge.product.sales.mapper.ProductSalesInfoConverter;
 import com.codechallenge.product.sales.mapper.ProductSalesInfoMapper;
 import com.codechallenge.product.sales.repository.ProductSalesInfoRepository;
 import com.codechallenge.product.sales.service.ProductSalesInfoService;
@@ -22,20 +22,20 @@ public class ProductSalesInfoServiceImpl implements ProductSalesInfoService {
 
     private final ProductSalesInfoMapper productSalesInfoMapper;
 
-    private final ProductSalesInfoAdapter productSalesInfoAdapter;
+    private final ProductSalesInfoConverter productSalesInfoConverter;
 
     @Override
     public Page<ProductSalesInfoDto> find(ProductSalesInfoDto salesInfoExample, PageRequest pageRequest) {
         return productSalesInfoRepository.findAll(
                 productSalesInfoMapper.toEntity(salesInfoExample),
                 pageRequest
-        ).map(productSalesInfoAdapter::adapt);
+        ).map(productSalesInfoConverter::convert);
     }
 
     @Override
     public List<ProductSalesInfoDto> findByProductIds(List<ObjectId> productIds) {
         return productSalesInfoRepository.findByProductIds(productIds).stream()
-                .map(productSalesInfoAdapter::adapt)
+                .map(productSalesInfoConverter::convert)
                 .collect(Collectors.toList());
     }
 }

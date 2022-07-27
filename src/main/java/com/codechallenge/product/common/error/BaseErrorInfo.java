@@ -8,4 +8,6 @@ public interface BaseErrorInfo {
 
     HttpStatus getHttpStatus();
 
+    Long getErrorCode();
+
 }
